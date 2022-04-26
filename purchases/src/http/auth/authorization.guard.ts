@@ -6,7 +6,10 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GqlExecutionContext } from '@nestjs/graphql'
+// import jwt from 'express-jwt';
+// import jwt from 'express-jwt';
 import { expressjwt } from 'express-jwt';
+// var { expressjwt: jwt } = require('express-jwt')
 import { expressJwtSecret } from 'jwks-rsa';
 import { promisify } from 'node:util';
 
@@ -19,6 +22,7 @@ export class AuthorizationGuard implements CanActivate {
     this.AUTH0_AUDIENCE = this.configService.get('AUTH0_AUDIENCE') ?? '';
     this.AUTH0_DOMAIN = this.configService.get('AUTH0_DOMAIN') ?? '';
   }
+
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const {req, res} = GqlExecutionContext.create(context).getContext()
@@ -41,6 +45,7 @@ export class AuthorizationGuard implements CanActivate {
       await checkJWT(req, res);
       return true;
     } catch (err) {
+      console.log(err)
       throw new UnauthorizedException(err);
     }
   }
